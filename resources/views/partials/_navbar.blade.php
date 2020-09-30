@@ -12,11 +12,18 @@
           <li class="nav-item">
             <a class="nav-link" href="/about">About</a>
           </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="/login">Login</a>
-          </li>
         </ul>
-
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Account
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="/login">Login</a>
+              <a class="dropdown-item" href="/userprofile">My profile</a>
+              <a class="dropdown-item" href="/profile">My Posts</a>
+              <a class="dropdown-item" href="/logout">Logout</a>
+            </div>
+          </div>
 
       </div>
     </nav>

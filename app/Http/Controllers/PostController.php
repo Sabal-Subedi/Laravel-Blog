@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Session;
 
 class PostController extends Controller
 {
@@ -17,7 +18,12 @@ class PostController extends Controller
     public function index()
     {   
         $posts=Post::all();
-        return view('posts.main')->withPosts($posts);
+        $datas=DB::table('users')
+        ->Select('users.id','users.first','users.last','users.email')
+        // ->where('users.id',$posts->userid)
+        ->get();
+        //return $data;
+        return view('posts.main',compact('datas'))->withPosts($posts);
     }
 
     /**
@@ -25,11 +31,13 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($id)
+    
+    public function add($id)
     {
         $user=new User;
         $user=User::find($id);
-        return view('posts.create');
+        //return view('posts.create');
+        return view('posts.create',compact('user'));
     }
 
     /**
@@ -38,20 +46,28 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request, $id)
+    {  
         $this->validate($request,array(
             'title'=>'required|max:255',
             'message'=>'required'
             
         ));
+        // $user=new User;
+        // $user=User::find($id);
         $posts=new Post;
+        $posts->userid=$id;
         $posts->title=$request->title;
         $posts->message=$request->message;
         $posts->save();
-        
-        return redirect(route('posts.index'));
+        Session::flash('success','New post saved successfully');
+        $data=DB::table('posts')
+        ->Select('posts.id','posts.title','posts.message','posts.created_at','posts.userid')
+        ->where('posts.userid',$id)->get();
+        return view('users.profile',compact('data'))->with('id',$id);
+
     }
+    
 
     /**
      * Display the specified resource.
@@ -83,7 +99,8 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        $posts=Post::find($id);
+        return view('posts.edit')->withPosts($posts);
     }
 
     /**
@@ -95,7 +112,12 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+        $posts=Post::find($id);
+        $datas=DB::table('posts')
+        ->where('id', $id)
+        ->update(['title' => $request->title, 'message' => $request->message, 'userid' =>$posts->userid],);
+        Session::flash('success','Post updated successfully');
+        return redirect()->route('profile');
     }
 
     /**
@@ -104,9 +126,11 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete($id)
     {
-        $posts=Post::find($id);
-        $posts->delete();
+        Session::flash('success','Post Deleted successfully');
+        DB::table('posts')->where('id', $id)->delete();
+        return redirect()->route('profile');
+        
     }
 }

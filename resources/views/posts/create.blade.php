@@ -2,9 +2,9 @@
 
 @section('title','|Create Post')
 @section('content')
-
+    
     <h1 style="margin-left:5%;">Create New Post</h1>
-    <form action="/create/posts" method="POST">
+    <form action="/create/posts/{{$user->id}}" method="POST">
     @csrf
     <div class="row">
         <div class="form-group col-md-8 col-md-offset=2">

@@ -17,8 +17,8 @@ class CreatePostsTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->text('message');
-            // $table->integer('userid')->unsigned();
-            // $table->foreign('userid')->references('id')->on('users');
+            $table->integer('userid')->unsigned();
+            $table->foreign('userid')->references('id')->on('users');
             $table->timestamps();
         });
     }

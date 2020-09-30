@@ -6,14 +6,7 @@
             <h1 style="margin-left:25%;">{{$posts->title}}</h1>
             
             <p style="margin-left:5%;">{{$posts->message}}</p>
-            <hr>
-            @if(session()->has('data'))
-            <a class="btn btn-danger" href="/posts/delete/{{$posts->id}}" role="button" style="float:right;margin-right:1%; width:150px">Delete</a>
-            <a class="btn btn-success" href="/posts/{{$posts->id}}/edit" role="button" style="float:right;margin-right:5px;margin-buttom:10px; width:150px">Edit</a>
-            @endif
-            
-                
-
+            <hr>   
             <h1 style="margin-left:5%;">Comments</h1>
             <hr>
                 @foreach($data as $key)

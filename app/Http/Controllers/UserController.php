@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;
+use Session;
 
 class UserController extends Controller
 {
@@ -36,10 +37,18 @@ class UserController extends Controller
     public function approve(Request $request){
         $user = DB::table('users')->where('email', $request->email)->first();
         if($user->email==$request->email&&$user->password==$request->password){
-            return view('posts.create');
+            $request->session()->put('data',$request->input());
+            $posts=Post::all();
+            $data=DB::table('posts')
+            ->Select('posts.id','posts.title','posts.message','posts.created_at','posts.userid')
+            ->where('posts.userid',$user->id)->get();
+            Session::flash('success','Login Successful');
+            return view('users.profile',compact('data'))->with('id',$user->id);
+            
         }
         else{
-            return back()->with('error','Login error');
+            Session::flash('success','Login Unsuccessful');
+            return back();
         }
        
     }
@@ -63,6 +72,7 @@ class UserController extends Controller
         $users->email=$request->email;
         $users->password=$request->password;
         $users->save();
+        Session::flash('success','New User created successfully');
         return view('users.login');
     }
 
