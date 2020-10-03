@@ -17,12 +17,12 @@ class PostController extends Controller
      */
     public function index()
     {   
-        $posts=Post::all();
+        $posts = DB::table('posts')
+                ->orderBy('posts.created_at', 'desc')
+                ->get();
         $datas=DB::table('users')
         ->Select('users.id','users.first','users.last','users.email')
-        // ->where('users.id',$posts->userid)
         ->get();
-        //return $data;
         return view('posts.main',compact('datas'))->withPosts($posts);
     }
 
@@ -64,7 +64,8 @@ class PostController extends Controller
         $data=DB::table('posts')
         ->Select('posts.id','posts.title','posts.message','posts.created_at','posts.userid')
         ->where('posts.userid',$id)->get();
-        return view('users.profile',compact('data'))->with('id',$id);
+        //return view('users.profile',compact('data'))->with('id',$id);
+        return redirect()->route('profile');
 
     }
     

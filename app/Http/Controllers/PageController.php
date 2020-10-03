@@ -30,7 +30,9 @@ class PageController extends Controller
             // return $id;
             $data=DB::table('posts')
             ->Select('posts.id','posts.title','posts.message','posts.created_at','posts.userid')
-            ->where('posts.userid',$id)->get();
+            ->where('posts.userid',$id)
+            ->orderBy('posts.created_at','desc')
+            ->get();
             return view('users.profile',compact('data'))->with('id',$id);
         }
         else{

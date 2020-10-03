@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use App\Models\User;
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Session;
 
 class UserController extends Controller
@@ -58,6 +60,36 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function upload($id){
+        return view('users.uploadavatar',compact('id'));
+    }
+
+    public function uploadavatar(Request $request, $id){
+        $users=User::find($id);
+        // if ($request->has('image')) {
+        //     $destinationPath = 'app/public/images/';
+        //     $files = $request->image; // will get all files
+        //     $files->move($destinationPath , $users->first);
+        //     // foreach ($files as $file) {//this statement will loop through all files.
+        //     //     $file_name = $users->first //Get file original name
+        //     //     $file->move($destinationPath , $file_name); // move files to destination folder
+        //     // }
+        //     return $users->id;
+        // }
+        if($request->has('image')){
+
+            $file = $request->image;
+       
+            Storage::put('/public/avatars/', $file);
+       
+        //    $post->filename = $file_new_names;
+            return $users->id;
+       
+          }
+        return $users->first;
+    }
+
+
     public function store(Request $request)
     {
         $this->validate($request,array(

@@ -1,0 +1,113 @@
+body{
+    background-image: url("/images/backgroundimage.jpg");
+}
+.container{
+    margin-top: 5px;
+    width:80%;
+    height: auto;
+    background-color: #E6E6FA;
+    border-radius: 20px;
+}
+.title{
+    text-align: center;
+    text-decoration: underline;
+}
+#post{
+    margin-top: 10px;
+    width: 95%;
+    margin-left: 2.5%;
+    border-radius: 20px;
+    background-color:#E0FFFF;
+}
+.post_title,.post_body{
+    color: black;
+    margin-left: 2%;
+}
+.post_created_by{
+    color:#778899;
+    margin-left: 2%;
+}
+.post_created_at{
+    color:#778899;
+    float: right;
+    margin-right: 5%;
+}
+#button_view{
+    width: 150px;
+    margin-left: 2%;
+    border-radius: 20px;
+    border-style: none;
+}
+#button_view:hover{
+    width: 180px;
+    margin-left: 2%;
+    color: crimson;
+    background-image:linear-gradient(to right,white,white,green);
+    border-style: none;
+}
+#button_add{
+    width: 150px;
+    border-radius: 20px;
+    border-style: none;
+    margin-left: 82%;
+    margin-bottom: 5%;
+}
+#button_add:hover{
+    width: 180px;
+    color: crimson;
+    background-image:linear-gradient(to right,white,white,green);
+    border-style: none;
+}
+#button_addaccount{
+    width: 150px;
+    border-radius: 20px;
+    border-style: none;
+    margin-left: 82%;
+    margin-bottom: 3px;
+}
+#button_addaccount:hover{
+    width: 180px;
+    color: crimson;
+    background-image:linear-gradient(to right,white,white,green);
+    border-style: none;
+}
+#button_comment{
+    width: 150px;
+    margin-left: 2%;
+    border-radius: 20px;
+    border-style: none;
+    margin-bottom: 5%;
+}
+#button_comment:hover{
+    width: 180px;
+    margin-left: 2%;
+    color: crimson;
+    background-image:linear-gradient(to right,white,white,green);
+    border-style: none;
+}
+.comment{
+    width:80%;
+}
+#comment_form{
+    background-color:#A9A9A9;
+    border-radius: 25px;
+    width: 60%;
+}
+#inputfield,#inputfield_body{
+    width:400px;
+    margin-left:2%;
+    border-style: none;
+    border-radius: 25px;
+    text-align: center;
+}
+.inputfield{
+    width:400px;
+    margin-left:2%;
+    border-style: none;
+    border-radius: 25px;
+    text-align: center;
+    height: 37px;
+}
+.inputlabel{
+    margin-left: 3%;
+}

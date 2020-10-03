@@ -2,26 +2,29 @@
 @section('title','|ALL Post')
 @section('content')
 
-<h1 style="text-align:center">All Posts</h1>
+<div class="container">
+    <h1 class="title">All Posts</h1>
     <div class="row">
-        <div class="col-md-10 col-md-offset=1">
+        <div class="col-md-12">
         @foreach($posts as $post)
-            <h1 style="margin-left:10%">{{$post->title}}</h1>
-            <p style="margin-left:10%">{{$post->message}}</p>
+        <div id="post">
+            <h1 class="post_title">{{$post->title}}</h1>
+            <p class="post_body">{{$post->message}}</p>
             <hr>
             @foreach($datas as $data)
             @if($data->id==$post->userid)
-                <p style="margin-left:10%"><b><u>Created by:</u> <br> {{$data->first}} {{$data->last}} <br>
+                <p class="post_created_by"><b><u>Created by:</u> <br> {{$data->first}} {{$data->last}} <br>
                 <u>{{$data->email}}</U></b></p>
             @endif
             @endforeach
-            <p style="float:right;"><b>Created at: </b> {{date('M j,Y ',strtotime($post->created_at))}}</p><br>
-            <a class="btn btn-success" style="margin-left:10%;width:150px;" href="pages/{{$post->id}}" role="button">View</a><br>
-            <hr>  
+            <p class="post_created_at"><b>Created at: </b> {{date('M j,Y ',strtotime($post->created_at))}}</p><br>
+            <a class="btn btn-success" id="button_view" href="pages/{{$post->id}}" role="button">View</a><br>
+            <hr>
+        </div> 
         @endforeach
-    
-    <a class="btn btn-success" href="/login" role="button" style="float:right;width:150px;">Add New Post</a>
+        </div>
+        <a class="btn btn-success" id="button_add" href="/login" role="button" style="width:150px;">Add New Post</a>
     </div>
-
+</div>
     
 @endsection

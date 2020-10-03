@@ -1,38 +1,43 @@
 @extends('layout')
 
 @section('content')
-<div class="row">
-        <div class="col-md-8 col-md-offset=2">
-            <h1 style="margin-left:25%;">{{$posts->title}}</h1>
-            
-            <p style="margin-left:5%;">{{$posts->message}}</p>
-            <hr>   
-            <h1 style="margin-left:5%;">Comments</h1>
-            <hr>
-                @foreach($data as $key)
-                <p style="margin-left:5%;"><b>Posted By: <br><u>{{$key->name}}</u><br><u>{{$key->email}}</u></b><br>
-                <b><u>Comment: </u></b>{{$key->comment}}</p><br>
-                <p style="float:right;"><b>Created at: </b> {{date('M j,Y ',strtotime($key->created_at))}}</p><br>
-                @endforeach
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="post">
+                <h1 class="post_title">{{$posts->title}}</h1>
+                
+                <p class="post_body">{{$posts->message}}</p>
+                <hr>   
+                <h1 class="title">Comments</h1>
                 <hr>
-            
+                    @foreach($data as $key)
+                    <p class="post_created_by"><b>Posted By: <br><u>{{$key->name}}</u><br><u>{{$key->email}}</u></b><br>
+                    <b><u>Comment: </u></b>{{$key->comment}}</p><br>
+                    <p class="post_created_at"><b>Created at: </b> {{date('M j,Y ',strtotime($key->created_at))}}</p><br>
+                    <hr>
+                    @endforeach
+                    
+            </div>
         </div>
     </div>
     <hr>
-    <form action='{{url("/create/comments/{$posts->id}")}}' method="POST">
-    @csrf
-    <div class="form-row">
-        <div class="form-group col-md-8 col-md-offset=2">
-        <input type="text" style="width:400px;margin-left:5%;" class="form-control" id="inputEmail4" placeholder="Full Name" name='name'>
+    <div class="comment">
+        <form action='{{url("/create/comments/{$posts->id}")}}' method="POST" id="comment_form">
+        @csrf
+        <div class="form-row">
+            <div class="form-group col-md-8 col-md-offset=2">
+            <input type="text" id="inputfield" class="form-control" placeholder="Full Name" name='name'>
+            </div>
+            <div class="form-group col-md-8 col-md-offset=2">
+            <input type="email" class="form-control" id="inputfield" placeholder="Email" name='email'>
+            </div>
+            <div class="form-group col-md-8 col-md-offset=2">
+            <Textarea  class="form-control" id="inputfield_body" placeholder="Write comments here!!!" name="comment"></Textarea> 
+            </div>
         </div>
-        <div class="form-group col-md-8 col-md-offset=2">
-        <input type="email" style="width:400px;margin-left:5%;" class="form-control" id="inputEmail4" placeholder="Email" name='email'>
-        </div>
-        <div class="form-group col-md-8 col-md-offset=2">
-        <Textarea  class="form-control" id="inputPassword4" style="width:400px;margin-left:5%;" placeholder="Write comments here!!!" name="comment"></Textarea> 
-        </div>
+        <button type="submit" id="button_comment" class="btn btn-primary">Comment</button>
+        <hr>
     </div>
-    <button type="submit" style="width:100px;margin-left:4%;" class="btn btn-primary">Comment</button>
-    <hr>
-    
+</div>
 @endsection
