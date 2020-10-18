@@ -13,7 +13,7 @@
     </div>
     <div class="form-group col-md-5 col-md-offset=1">
       <label>Last Name</label>
-      <input type="text" class="form-control" id="inputfield" placeholder="last" name='last' required data-parsley-pattern="[a-zA-Z]+$" data-parsley-trigger="keyup" />
+      <input type="text" class="form-control" id="inputfield" placeholder="LastName" name='last' required data-parsley-pattern="[a-zA-Z]+$" data-parsley-trigger="keyup" />
     </div>
     <div class="form-group col-md-8 col-md-offset=2">
       <label class="inputlabel">Email </label>

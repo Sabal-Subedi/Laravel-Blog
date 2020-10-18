@@ -26,21 +26,25 @@
         </div>
     </div>
     <hr>
+    <h1 class="reply_title">Reply</h1>
     <div class="comment">
+    @foreach($users as $user)
         <form action='{{url("/create/comments/{$posts->id}")}}' method="POST" id="comment_form">
         @csrf
         <div class="form-row">
             <div class="form-group col-md-8 col-md-offset=2">
-            <input type="text" class="form-control" id="inputfield" placeholder="Full Name" name='name'>
+            <input type="text" class="form-control" id="inputfield" value="{{$user->first}} {{$user->last}}" name='name'>
             </div>
             <div class="form-group col-md-8 col-md-offset=2">
-            <input type="email" class="form-control" id="inputfield" placeholder="Email" name='email'>
+            <input type="email" class="form-control" id="inputfield" value="{{$user->email}}" name='email'>
             </div>
             <div class="form-group col-md-8 col-md-offset=2">
             <Textarea  class="form-control" id="inputfield_body" placeholder="Write comments here!!!" name="comment"></Textarea> 
             </div>
         </div>
-        <button type="submit" id="button_comment" class="btn btn-primary">Comment</button>
+        <button type="submit" id="button_comment" class="btn btn-primary">Reply</button>
+        </form>
+        @endforeach
         <hr>
     </div>
 </div>

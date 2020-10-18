@@ -21,13 +21,13 @@ class PageController extends Controller
     public function profile(){
         if(session()->has('data')){
             $value=session()->get('data');
+            // return $value;
             $users=DB::table('users')
             ->select('users.id','users.first','users.last','users.email')
-            ->where('users.email',$value['email'])->get();
+            ->where('users.email',$value)->get();
             foreach($users as $key){
                 $id=$key->id;
             }
-            // return $id;
             $data=DB::table('posts')
             ->Select('posts.id','posts.title','posts.message','posts.created_at','posts.userid')
             ->where('posts.userid',$id)
@@ -45,17 +45,9 @@ class PageController extends Controller
         if(session()->has('data')){
             $value=session()->get('data');
             $users=DB::table('users')
-            ->select('users.id','users.first','users.last','users.email')
-            ->where('users.email',$value['email'])->get();
+            ->select('users.id','users.first','users.last','users.email','users.image')
+            ->where('users.email',$value)->get();
             return view('pages.userprofile')->with('users',$users);
-            // foreach($posts as $key){
-            //     $id=$key->id;
-            // }
-            // return $id;
-            // $data=DB::table('posts')
-            // ->Select('posts.id','posts.title','posts.message','posts.created_at','posts.userid')
-            // ->where('posts.userid',$id)->get();
-            // return view('users.profile',compact('data'))->with('id',$id);
         }
         else{
             Session::flash('success','Please login !!!!!!');

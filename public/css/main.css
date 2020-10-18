@@ -11,6 +11,7 @@ body{
 .title{
     text-align: center;
     text-decoration: underline;
+    color: blue;
 }
 #post{
     margin-top: 10px;
@@ -95,7 +96,7 @@ body{
 }
 #inputfield,#inputfield_body{
     width:400px;
-    margin-left:2%;
+    margin-left:15%;
     border-style: none;
     border-radius: 25px;
     text-align: center;
@@ -110,4 +111,12 @@ body{
 }
 .inputlabel{
     margin-left: 3%;
+}
+#choose_image{
+    margin-left: 2.5%;
+}
+.reply_title{
+    margin-left: 20%;
+    text-decoration: underline;
+    color: deeppink;
 }

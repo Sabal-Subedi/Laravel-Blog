@@ -38,21 +38,33 @@ class UserController extends Controller
 
     public function approve(Request $request){
         $user = DB::table('users')->where('email', $request->email)->first();
-        if($user->email==$request->email&&$user->password==$request->password){
-            $request->session()->put('data',$request->input());
-            $posts=Post::all();
-            $data=DB::table('posts')
-            ->Select('posts.id','posts.title','posts.message','posts.created_at','posts.userid')
-            ->where('posts.userid',$user->id)->get();
-            Session::flash('success','Login Successful');
-            return view('users.profile',compact('data'))->with('id',$user->id);
-            
+        if($user==null){
+            Session::flash('success','Information Incorrect!!. Enter Correct Information');
+            return back();
+        }
+        if($user->email==$request->email&&$user->password==$request->password){  
+            if($user->is_verified!=0)
+            {
+                session()->put('data',$request->email);
+                $posts=Post::all();
+                $data=DB::table('posts')
+                ->Select('posts.id','posts.title','posts.message','posts.created_at','posts.userid')
+                ->where('posts.userid',$user->id)->get();
+                Session::flash('success','Login Successful');
+                return view('users.profile',compact('data'))->with('id',$user->id);
+            }
+            else{
+                Session::flash('success','Please Verify Your Account');
+                $data=DB::table('users')
+                ->Select('users.id','users.first','users.last','users.email','users.created_at','users.verification_code','users.image')
+                ->where('users.email',$request->email)->get();
+                return view('users.verifyAccount',compact('data'))->with('id',$user->id); 
+            }
         }
         else{
             Session::flash('success','Login Unsuccessful');
             return back();
-        }
-       
+        }  
     }
     /**
      * Store a newly created resource in storage.
@@ -61,37 +73,87 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function upload($id){
-        return view('users.uploadavatar',compact('id'));
+        $data=DB::table('users')
+            ->Select('users.id','users.first','users.last','users.created_at','users.verification_code','users.image')
+            ->where('users.id',$id)->get();
+        return view('users.updateUser',compact('data'));
     }
 
-    public function uploadavatar(Request $request, $id){
-        $users=User::find($id);
-        // if ($request->has('image')) {
-        //     $destinationPath = 'app/public/images/';
-        //     $files = $request->image; // will get all files
-        //     $files->move($destinationPath , $users->first);
-        //     // foreach ($files as $file) {//this statement will loop through all files.
-        //     //     $file_name = $users->first //Get file original name
-        //     //     $file->move($destinationPath , $file_name); // move files to destination folder
-        //     // }
-        //     return $users->id;
-        // }
+    public function updateUser(Request $request, $id){
         if($request->has('image')){
-
-            $file = $request->image;
-       
-            Storage::put('/public/avatars/', $file);
-       
-        //    $post->filename = $file_new_names;
-            return $users->id;
-       
-          }
-        return $users->first;
+                $file= $request->image;
+                $extension = $file->getClientOriginalExtension();
+                $profilename=$request->first.".".$extension;
+                $request->image->storeAs('/public', $profilename);
+                $url = Storage::url($profilename);
+                $data=DB::table('users')
+                    ->where('id', $id)
+                    ->update(['first' => $request->first, 'last' => $request->last, 'password' =>$request->password,'image' =>$profilename]);
+                $users=DB::table('users')
+                    ->select('users.id','users.first','users.last','users.email','users.image')
+                    ->where('users.id',$request->id)->get();
+                Session::flash('success', "Update Success !");
+                return view('pages.userprofile')->with('users',$users);
+            }
+        else{
+            Session::flash('success', "Please Try Again!");
+            return Redirect()->back();
+        }
     }
 
+    public function uploadImage(Request $request ,$id){
+        $data=User::find($id);
+        if($request->has('image')){
+            $file= $request->image;
+            $extension = $file->getClientOriginalExtension();
+            $profilename=$data->first.".".$extension;
+            $request->image->storeAs('/public', $profilename);
+            $url = Storage::url($profilename);
+            $users= db::table('users')
+            ->where('id', $id)
+            ->update(['image' => $profilename]);
+            return view('users.login');
+        }
+        else{
+            Session::flash('success', "Please Try Again!");
+            return Redirect()->back();
+        }
+    }
+
+    public function verifyAccount(Request $request ,$id){
+        $data=User::find($id);
+        if($request->verification==$data->verification_code){
+            $Value=DB::table('users')
+                ->where('id', $id)
+                ->update(['is_verified' =>true]);  
+            $user=User::find($id);
+            $posts=Post::all();
+            session()->put('data',$user->email);
+            
+            $data=DB::table('posts')
+            ->Select('posts.id','posts.title','posts.message','posts.created_at','posts.userid')
+            ->where('posts.userid',$id)->get();
+            Session::flash('success','Account Verified. Login Successful');
+            return view('users.profile',compact('data'))->with('id',$id);
+        }
+        else{
+            Session::flash('success', "Verification code Error .Please Try Logging Again!");
+            return Redirect()->route('loginpage');
+        }
+    }
+
+
+    public function skipImage($id){
+            $profilename="defaultimg.jpg";
+            $users= db::table('users')
+            ->where('id', $id)
+            ->update(['image' => $profilename]);
+            return view('users.login');
+    }
 
     public function store(Request $request)
     {
+        $random = rand(100000,999999);
         $this->validate($request,array(
             'first'=>'required|max:255',
             'last'=>'required|max:255',
@@ -103,9 +165,20 @@ class UserController extends Controller
         $users->last=$request->last;
         $users->email=$request->email;
         $users->password=$request->password;
+        $users->verification_code=$random;
         $users->save();
-        Session::flash('success','New User created successfully');
-        return view('users.login');
+        if($users!=null){
+            MailController::sendSignupEmail($users->first,$users->email,$users->verification_code);
+            Session::flash('success','New User created successfully');
+            return view('users.profilepicture')->with('id',$users->id);
+            
+        }
+        else{
+            Session::flash('success','Please enter correct information');
+            return view('users.login');
+        }
+        // Session::flash('success','New User created successfully');
+        // return view('users.login');
     }
 
     /**

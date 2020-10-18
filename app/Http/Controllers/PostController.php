@@ -53,8 +53,7 @@ class PostController extends Controller
             'message'=>'required'
             
         ));
-        // $user=new User;
-        // $user=User::find($id);
+        
         $posts=new Post;
         $posts->userid=$id;
         $posts->title=$request->title;
@@ -78,18 +77,15 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        // $data=DB::table('posts')
-        //     ->Join('comments', 'posts.id', '=', 'comments.post_id')
-        //     ->Select('posts.id','posts.title','posts.message','comments.commentid','comments.name','comments.email','comments.comment','comments.post_id','comments.created_at')
-        //     ->where('posts.id',$id)
-        //     ->get();
-        //     return view('pages.show',compact('data'));
-        //     return $data;
         $data=DB::table('comments')
             ->Select('comments.commentid','comments.name','comments.email','comments.comment','comments.post_id','comments.created_at')
             ->where('comments.post_id',$id)->get();
         $posts=Post::find($id);
-        return view('posts.show',compact('data'))->withPosts($posts);
+        $users=DB::table('users')
+            ->Select('users.id','users.first','users.last','users.email','users.created_at')
+            ->where('users.id',$posts->userid)->get();
+        //return $users;
+        return view('posts.show',compact('data','users'))->withPosts($posts);
     }
 
     /**
@@ -129,8 +125,10 @@ class PostController extends Controller
      */
     public function delete($id)
     {
+        DB::table('comments')->where('post_id', $id)->delete();
+        $posts = POST::findOrFail($id);
+        $posts->delete();
         Session::flash('success','Post Deleted successfully');
-        DB::table('posts')->where('id', $id)->delete();
         return redirect()->route('profile');
         
     }

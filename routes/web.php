@@ -25,7 +25,10 @@ Route::get('/login',function(){
     }
 });
 
-Route::post('/upload/image/{id}',[UserController::class,'uploadavatar']);
+Route::post('/upload/image/{id}',[UserController::class,'updateUser']);
+Route::post('/upload/profilepicture/{id}',[UserController::class,'uploadImage']);
+Route::post('/verifyAccount/{id}',[UserController::class,'verifyAccount']);
+Route::get('/skip/profilepicture/{id}',[UserController::class,'skipImage']);
 
 Route::get('/upload/{id}',[UserController::class,'upload']);
 
