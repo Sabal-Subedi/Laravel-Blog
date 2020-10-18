@@ -45,6 +45,7 @@
         <button type="submit" id="button_comment" class="btn btn-primary">Reply</button>
         </form>
         @endforeach
+        
         <hr>
     </div>
 </div>
