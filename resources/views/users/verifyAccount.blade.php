@@ -12,7 +12,7 @@
         <form id="validation"  action="/verifyAccount/{{$id}}" method="post">
         @csrf
         <label class="inputlabel">Enter verification code  </label>
-        <input type="text" id="verify_field" placeholder="Verification Code" name="verification" required data-parsley-maxlength ="6" data-parsley-trigger="keyup" />
+        <input type="text" id="verify_field" placeholder="Enter Code" name="verification" required data-parsley-maxlength ="6" data-parsley-trigger="keyup" />
         <br><br>
         <input id="button_comment" type="submit" class="btn btn-success" value="Verify"/>
         </form>

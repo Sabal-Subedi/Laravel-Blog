@@ -1,4 +1,5 @@
-Hey {{$email_data['name']}}!
+<br>
+Hi {{$email_data['name']}}!
 <br>
 Welcome to Laravel Blog
 <br><br>

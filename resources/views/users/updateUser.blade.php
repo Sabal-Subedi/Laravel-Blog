@@ -30,7 +30,10 @@
       <label>Confirm Password</label>
       <input type="password" class="inputfield" id="confirmpassword" placeholder="Confirm Password" name="confirmpassword" required data-parsley-equalto="#password" data-parsley-trigger="keyup" />
     </div>
-    <input id="choose_image" type="file" name="image"/>
+    <div class="custom-file">
+      <input id="choose_image" type="file" name="image"/>
+    </div>
+    <br><br><br>
     <input id="button_comment" type="submit" value="Upload"/>
     </form>
     <a class="btn btn-danger" href="{{route('profile')}}" role="button" id="button_addaccount">Cancel</a>

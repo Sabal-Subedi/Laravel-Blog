@@ -32,6 +32,35 @@ class UserController extends Controller
         return view('users.create');
     }
 
+    public function forgetpassword(){
+        return view('users.forgetpassword');
+    }
+
+    public function resetpassword(Request $request){
+        $users = DB::table('users')
+        ->Select('users.id','users.first','users.last','users.email','users.password','users.created_at','users.verification_code','users.image','users.is_verified')
+        ->where('email', $request->email)->get();
+        if(!$users->isEmpty()){
+            foreach($users as $user){
+                $id=$user->id;
+                $name=$user->first;
+                $email=$user->email;
+                $verification_code=$user->verification_code;
+                $data=[
+                    'name' =>$name,
+                    'email' =>$email,
+                    'verification_code'=>$verification_code
+                ];
+            }
+                MailController::sendResetPasswordEmail($name,$email,$verification_code);
+                return view('users.resetpassword',compact('data'))->with('id',$id);
+        }
+        else{
+            Session::flash('success','Please enter correct information');
+            return view('users.login');
+        }
+    }
+
     public function login(){
         return view('users.login');
     }
@@ -112,7 +141,11 @@ class UserController extends Controller
             $users= db::table('users')
             ->where('id', $id)
             ->update(['image' => $profilename]);
-            return view('users.login');
+            $data=DB::table('users')
+            ->Select('users.id','users.first','users.email')
+            ->where('users.id',$id)->get();
+            Session::flash('success','A verification code has been sent to your email. Please enter the code to verify your account.');
+            return view('users.verifyAccount',compact('data','id'));
         }
         else{
             Session::flash('success', "Please Try Again!");
@@ -142,13 +175,47 @@ class UserController extends Controller
         }
     }
 
+    public function resetAccountPassword(Request $request ,$id){
+        $data=User::find($id);
+        if($request->verification==$data->verification_code){
+            return view('users.newpassword')->with('id',$id);
+        }
+        else{
+            Session::flash('success', "Verification code Error .Please Try Again!");
+            return Redirect()->route('loginpage');
+        }
+    }
+
+
+    public function changePassword(Request $request, $id){
+        if($request->newpassword!=null){
+                $value=DB::table('users')
+                    ->where('id', $id)
+                    ->update(['password' =>$request->newpassword]);
+                $users=User::find($id);
+                session()->put('data',$users->email);
+                $data=DB::table('posts')
+                ->Select('posts.id','posts.title','posts.message','posts.created_at','posts.userid')
+                ->where('posts.userid',$id)->get();
+                Session::flash('success','Password Reset Successful!');
+                return view('users.profile',compact('data'))->with('id',$id);
+            }
+        else{
+            Session::flash('success', "Please Try Again!");
+            return Redirect()->back();
+        }
+    }
 
     public function skipImage($id){
             $profilename="defaultimg.jpg";
             $users= db::table('users')
             ->where('id', $id)
             ->update(['image' => $profilename]);
-            return view('users.login');
+            $data=DB::table('users')
+            ->Select('users.id','users.first','users.email')
+            ->where('users.id',$id)->get();
+            Session::flash('success','A verification code has been sent to your email. Please enter the code to verify your account.');
+            return view('users.verifyAccount',compact('data','id'));
     }
 
     public function store(Request $request)
@@ -157,7 +224,7 @@ class UserController extends Controller
         $this->validate($request,array(
             'first'=>'required|max:255',
             'last'=>'required|max:255',
-            'email'=>'required|email',
+            'email'=>'required|email|unique:users',
             'password'=>'required'
         ));
         $users= new User;
@@ -169,7 +236,7 @@ class UserController extends Controller
         $users->save();
         if($users!=null){
             MailController::sendSignupEmail($users->first,$users->email,$users->verification_code);
-            Session::flash('success','New User created successfully');
+            Session::flash('success','Please choose your Profile Picture');
             return view('users.profilepicture')->with('id',$users->id);
             
         }

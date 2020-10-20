@@ -4,6 +4,7 @@
 
 <div class="container">
     <h1 class="title">All Posts</h1>
+    <a class="btn btn-success" id="button_addaccount" href="/login" role="button" style="width:150px;">Add New Post</a>
     <div class="row">
         <div class="col-md-12">
         @foreach($posts as $post)
@@ -23,7 +24,7 @@
         </div> 
         @endforeach
         </div>
-        <a class="btn btn-success" id="button_add" href="/login" role="button" style="width:150px;">Add New Post</a>
+       
     </div>
 </div>
     

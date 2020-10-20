@@ -3,6 +3,7 @@
 @section('content')
 <div class="container">
     <h1 class="title">My Posts</h1>
+    <a class="btn btn-success" href="/posts/add/{{$id}}" id="button_addaccount" role="button">Add Post</a>
     <div class="row">
         <div class="col-md-12">
             @foreach($data as $key)
@@ -14,8 +15,6 @@
                 <hr>
             </div> 
             @endforeach
-            <a class="btn btn-success" href="/posts/add/{{$id}}" id="button_add" role="button">Add Post</a>
-
     </div>
 </div>
 @endsection

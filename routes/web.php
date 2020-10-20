@@ -29,6 +29,10 @@ Route::post('/upload/image/{id}',[UserController::class,'updateUser']);
 Route::post('/upload/profilepicture/{id}',[UserController::class,'uploadImage']);
 Route::post('/verifyAccount/{id}',[UserController::class,'verifyAccount']);
 Route::get('/skip/profilepicture/{id}',[UserController::class,'skipImage']);
+Route::get('/forgetpassword',[UserController::class,'forgetpassword']);
+Route::post('/resetpassword',[UserController::class,'resetpassword']);
+Route::post('/resetaccountpassword/{id}',[UserController::class,'resetAccountPassword']);
+Route::post('/changepassword/{id}',[UserController::class,'changePassword']);
 
 Route::get('/upload/{id}',[UserController::class,'upload']);
 

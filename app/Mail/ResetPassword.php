@@ -7,9 +7,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class SignupEmail extends Mailable
+class ResetPassword extends Mailable
 {
-    public $data;
+    public $value;
     use Queueable, SerializesModels;
 
     /**
@@ -17,9 +17,9 @@ class SignupEmail extends Mailable
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($value)
     {
-        $this->signup_data = $data;
+        $this->signup_data = $value;
     }
 
     /**
@@ -29,7 +29,6 @@ class SignupEmail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Security alert')->view('Mail.Signup_Email',['email_data'=>$this->signup_data]);
-        
+        return $this->subject('Laravel Blog Reset Password')->view('Mail.ResetPassword_Email',['email_data'=>$this->signup_data]);
     }
 }
