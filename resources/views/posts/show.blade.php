@@ -1,45 +1,52 @@
 @extends('layout')
 
 @section('content')
-<div class="row">
-        <div class="col-md-8 col-md-offset=2">
-            <h1 style="margin-left:25%;">{{$posts->title}}</h1>
-            
-            <p style="margin-left:5%;">{{$posts->message}}</p>
-            <hr>
-            @if(session()->has('data'))
-            <a class="btn btn-danger" href="/posts/delete/{{$posts->id}}" role="button" style="float:right;margin-right:1%; width:150px">Delete</a>
-            <a class="btn btn-success" href="/posts/{{$posts->id}}/edit" role="button" style="float:right;margin-right:5px;margin-buttom:10px; width:150px">Edit</a>
-            @endif
-            
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="post">
+                <h1 class="post_title">{{$posts->title}}</h1>
                 
+                <p class="post_body">{{$posts->message}}</p>
+                <hr>
+                @if(session()->has('data'))
+                <a class="btn btn-danger" href="/posts/delete/{{$posts->id}}" role="button" id="button_view">Delete</a>
+                <a class="btn btn-success" href="/posts/{{$posts->id}}/edit" role="button" id="button_view">Edit</a>
+                @endif
 
-            <h1 style="margin-left:5%;">Comments</h1>
-            <hr>
+                <h1 class="title">Comments</h1>
+                <hr>
                 @foreach($data as $key)
-                <p style="margin-left:5%;"><b>Posted By: <br><u>{{$key->name}}</u><br><u>{{$key->email}}</u></b><br>
+                <p class="post_created_by"><b>Posted By: <br><u>{{$key->name}}</u><br><u>{{$key->email}}</u></b><br>
                 <b><u>Comment: </u></b>{{$key->comment}}</p><br>
-                <p style="float:right;"><b>Created at: </b> {{date('M j,Y ',strtotime($key->created_at))}}</p><br>
+                <p class="post_created_at"><b>Created at: </b> {{date('M j,Y ',strtotime($key->created_at))}}</p><br>
                 @endforeach
                 <hr>
-            
+            </div>
         </div>
     </div>
     <hr>
-    <form action='{{url("/create/comments/{$posts->id}")}}' method="POST">
-    @csrf
-    <div class="form-row">
-        <div class="form-group col-md-8 col-md-offset=2">
-        <input type="text" style="width:400px;margin-left:5%;" class="form-control" id="inputEmail4" placeholder="Full Name" name='name'>
+    <h1 class="reply_title">Reply</h1>
+    <div class="comment">
+    @foreach($users as $user)
+        <form action='{{url("/create/comments/{$posts->id}")}}' method="POST" id="comment_form">
+        @csrf
+        <div class="form-row">
+            <div class="form-group col-md-8 col-md-offset=2">
+            <input type="text" class="form-control" id="inputfield" value="{{$user->first}} {{$user->last}}" name='name'>
+            </div>
+            <div class="form-group col-md-8 col-md-offset=2">
+            <input type="email" class="form-control" id="inputfield" value="{{$user->email}}" name='email'>
+            </div>
+            <div class="form-group col-md-8 col-md-offset=2">
+            <Textarea  class="form-control" id="inputfield_body" placeholder="Write comments here!!!" name="comment"></Textarea> 
+            </div>
         </div>
-        <div class="form-group col-md-8 col-md-offset=2">
-        <input type="email" style="width:400px;margin-left:5%;" class="form-control" id="inputEmail4" placeholder="Email" name='email'>
-        </div>
-        <div class="form-group col-md-8 col-md-offset=2">
-        <Textarea  class="form-control" id="inputPassword4" style="width:400px;margin-left:5%;" placeholder="Write comments here!!!" name="comment"></Textarea> 
-        </div>
+        <button type="submit" id="button_comment" class="btn btn-primary">Reply</button>
+        </form>
+        @endforeach
+        
+        <hr>
     </div>
-    <button type="submit" style="width:100px;margin-left:4%;" class="btn btn-primary">Comment</button>
-    <hr>
-    
+</div>
 @endsection

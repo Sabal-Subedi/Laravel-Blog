@@ -25,6 +25,17 @@ Route::get('/login',function(){
     }
 });
 
+Route::post('/upload/image/{id}',[UserController::class,'updateUser']);
+Route::post('/upload/profilepicture/{id}',[UserController::class,'uploadImage']);
+Route::post('/verifyAccount/{id}',[UserController::class,'verifyAccount']);
+Route::get('/skip/profilepicture/{id}',[UserController::class,'skipImage']);
+Route::get('/forgetpassword',[UserController::class,'forgetpassword']);
+Route::post('/resetpassword',[UserController::class,'resetpassword']);
+Route::post('/resetaccountpassword/{id}',[UserController::class,'resetAccountPassword']);
+Route::post('/changepassword/{id}',[UserController::class,'changePassword']);
+
+Route::get('/upload/{id}',[UserController::class,'upload']);
+
 Route::get('logout',[PageController::class,'logout']);
 Route::get('/profile',[PageController::class,'profile'])->name('profile');
 Route::get('userprofile',[PageController::class,'userprofile']);
@@ -51,6 +62,7 @@ Route::get('/profile/{id}',[PageController::class,'profile']);
 Route::post('create/posts/{id}',[PostController::class,'store']);
 Route::post('/posts/{id}',[PostController::class,'update']);
 Route::get('posts/create/{id}',[PostController::class,'show'])->name('posts.create');
+
 Route::get('posts/view/{id}',[PostController::class,'show']);
 Route::get('posts/delete/{id}',[PostController::class,'delete']);
 Route::get('posts/add/{id}',[PostController::class,'add']);
